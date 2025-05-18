@@ -2,8 +2,8 @@
 {
     public class MatchStatistic
     {
-        public int Id { get; set; }
-        public int FootballerId { get; set; }
+        public Guid Id { get; set; }
+        public Guid FootballerId { get; set; }
         public string Opposition { get; set; }
         public int MinutesPlayed { get; set; }
         public int Goals { get; set; }

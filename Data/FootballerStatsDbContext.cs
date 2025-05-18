@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace FootballerStatsApi.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class FootballerStatsDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public FootballerStatsDbContext(DbContextOptions<FootballerStatsDbContext> options) : base(options) { }
 
         public DbSet<Footballer> Footballers { get; set; }
         public DbSet<MatchStatistic> MatchStatistics { get; set; }

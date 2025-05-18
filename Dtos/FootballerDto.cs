@@ -1,6 +1,8 @@
-﻿namespace FootballerStatsApi.Models
+﻿using FootballerStatsApi.Models;
+
+namespace FootballerStatsApi.Dtos
 {
-    public class Footballer
+    public class FootballerDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
