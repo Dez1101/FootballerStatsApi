@@ -15,7 +15,9 @@ namespace FootballerStatsApi.Repositories
         }
         public async Task<List<Footballer>> GetAllPlayersAsync()
         {
-            return await dbContext.Footballers.ToListAsync();
+            return await dbContext.Footballers
+        .Include(f => f.MatchStatistics)
+        .ToListAsync();
         }
 
         public async Task<Footballer?> GetPlayerByIdAsync(Guid id)

@@ -10,6 +10,6 @@ namespace FootballerStatsApi.Dtos
         public string Club { get; set; }
         public string Position { get; set; }
 
-        public ICollection<MatchStatistic> MatchStatistics { get; set; }
+        public ICollection<MatchStatisticDto> MatchStatistics { get; set; }
     }
 }

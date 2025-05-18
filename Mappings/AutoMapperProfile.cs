@@ -11,6 +11,10 @@ namespace FootballerStatsApi.Mappings
             CreateMap<Footballer, FootballerDto>().ReverseMap();
             CreateMap<AddPlayerDto, Footballer>();
             CreateMap<UpdatePlayerDto, Footballer>();
+
+            CreateMap<AddMatchStatisticDto, MatchStatistic>();
+            CreateMap<MatchStatistic, MatchStatisticDto>();
+            CreateMap<UpdateMatchStatisticDto, MatchStatistic>();
         }
     }
 }

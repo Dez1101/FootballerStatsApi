@@ -14,6 +14,14 @@ builder.Services.AddDbContext<FootballerStatsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FootballerStatsDbConnection")));
 
 builder.Services.AddScoped<IPlayersRepository, PlayersRepository>();
+builder.Services.AddScoped<IMatchStatisticsRepository, MatchStatisticsRepository>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 
