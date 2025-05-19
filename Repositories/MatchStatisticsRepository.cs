@@ -19,12 +19,9 @@ namespace FootballerStatsApi.Repositories
         }
         public async Task<List<MatchStatistic>> GetAllForFootballerAsync(Guid footballerId)
         {
-            var playerStats = await dbContext.MatchStatistics
+            return await dbContext.MatchStatistics
                 .Where(stat => stat.FootballerId == footballerId)
                 .ToListAsync();
-
-            if (playerStats == null) return null;
-            return playerStats;
         }
         public async Task<MatchStatistic?> GetByIdAsync(Guid id)
         {
@@ -35,23 +32,70 @@ namespace FootballerStatsApi.Repositories
         }           
         public async Task<MatchStatistic> AddAsync(MatchStatistic stat)
         {
-            await dbContext.MatchStatistics.AddAsync(stat);
-            await dbContext.SaveChangesAsync();
-            return stat;
+            try
+            {
+                await dbContext.MatchStatistics.AddAsync(stat);
+                await dbContext.SaveChangesAsync();
+                return stat;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding match statistic", ex);
+            }
         }
         public async Task<MatchStatistic?> UpdateAsync(Guid id, MatchStatistic stat)
         {
-            var existing = await dbContext.MatchStatistics.FindAsync(id);
-            if (existing == null) return null;
+            if (stat == null)
+                throw new ArgumentNullException(nameof(stat));
 
-            existing.Opposition = stat.Opposition;
-            existing.MinutesPlayed = stat.MinutesPlayed;
-            existing.Goals = stat.Goals;
-            existing.Assists = stat.Assists;
-            existing.PassCompletion = stat.PassCompletion;
+            try
+            {
+                var existing = await dbContext.MatchStatistics.FindAsync(id);
+                if (existing == null)
+                    return null;
 
-            await dbContext.SaveChangesAsync();
-            return existing;
+                existing.Opposition = stat.Opposition;
+                existing.MinutesPlayed = stat.MinutesPlayed;
+                existing.Goals = stat.Goals;
+                existing.Assists = stat.Assists;
+                existing.PassCompletion = stat.PassCompletion;
+
+                await dbContext.SaveChangesAsync();
+                return existing;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred while updating the match statistic.", ex);
+            }
+        }
+        public async Task<FootballerStatsSummaryDto?> GetSummaryForFootballerAsync(Guid footballerId)
+        {
+            try
+            {
+                var stats = await dbContext.MatchStatistics
+                    .Where(ms => ms.FootballerId == footballerId)
+                    .ToListAsync();
+
+                if (!stats.Any()) return null;
+
+                var footballer = await dbContext.Footballers.FindAsync(footballerId);
+                if (footballer == null) return null;
+
+                return new FootballerStatsSummaryDto
+                {
+                    FootballerId = footballerId,
+                    Name = footballer.Name,
+                    TotalMatches = stats.Count,
+                    TotalGoals = stats.Sum(ms => ms.Goals),
+                    TotalAssists = stats.Sum(ms => ms.Assists),
+                    TotalMinutesPlayed = stats.Sum(ms => ms.MinutesPlayed),
+                    AveragePassCompletion = stats.Average(ms => ms.PassCompletion)
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while calculating the footballer's stats summary.", ex);
+            }
         }
         public async Task<FootballerStatsSummaryDto?> GetSummaryForFootballerAsync(Guid footballerId)
         {

@@ -22,15 +22,29 @@ namespace FootballerStatsApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPlayers()
         {
-            var players = await playersRepository.GetAllPlayersAsync();
-            return Ok(mapper.Map<List<FootballerBasicDto>>(players));
+            try
+            {
+                var players = await playersRepository.GetAllPlayersAsync();
+                return Ok(mapper.Map<List<FootballerBasicDto>>(players));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetPlayer(Guid id)
         {
-            var player = await playersRepository.GetPlayerByIdAsync(id);
-            return player == null ? NotFound() : Ok(mapper.Map<FootballerBasicDto>(player));
+            try
+            {
+                var player = await playersRepository.GetPlayerByIdAsync(id);
+                return player == null ? NotFound() : Ok(mapper.Map<FootballerBasicDto>(player));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpPost]
@@ -38,10 +52,17 @@ namespace FootballerStatsApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var footballer = mapper.Map<Footballer>(addPlayerDto);
-            var added = await playersRepository.AddPlayerAsync(footballer);
+            try
+            {
+                var footballer = mapper.Map<Footballer>(addPlayerDto);
+                var added = await playersRepository.AddPlayerAsync(footballer);
 
-            return CreatedAtAction(nameof(GetPlayer), new { id = added.Id }, mapper.Map<FootballerDto>(added));
+                return CreatedAtAction(nameof(GetPlayer), new { id = added.Id }, mapper.Map<FootballerDto>(added));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpPut("{id:guid}")]
@@ -49,18 +70,31 @@ namespace FootballerStatsApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var updatedFootballer = mapper.Map<Footballer>(updatePlayerDto);
-            var updated = await playersRepository.UpdatePlayerAsync(id, updatedFootballer);
+            try
+            {
+                var updatedFootballer = mapper.Map<Footballer>(updatePlayerDto);
+                var updated = await playersRepository.UpdatePlayerAsync(id, updatedFootballer);
 
-            return updated == null ? NotFound() : Ok(mapper.Map<FootballerDto>(updated));
+                return updated == null ? NotFound() : Ok(mapper.Map<FootballerDto>(updated));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeletePlayer(Guid id)
         {
-            var deleted = await playersRepository.DeletePlayerAsync(id);
-            return deleted ? NoContent() : NotFound();
+            try
+            {
+                var deleted = await playersRepository.DeletePlayerAsync(id);
+                return deleted ? NoContent() : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
     }
-
 }
