@@ -37,8 +37,19 @@ namespace FootballerStatsApi.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var stat = await repository.GetByIdAsync(id);
-            return stat == null ? NotFound() : Ok(mapper.Map<MatchStatisticDto>(stat));
+            if (stat == null) return NotFound();
+                
+            return Ok(mapper.Map<MatchStatisticDto>(stat));
         }
+
+        [HttpGet("footballer/{footballerId:guid}")]
+        public async Task<IActionResult> GetAllForFootballer(Guid footballerId)
+        {
+            var stats = await repository.GetAllForFootballerAsync(footballerId);
+            if(stats == null) return NotFound();
+            return Ok(mapper.Map<List<MatchStatisticDto>>(stats));
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddMatchStatisticDto dto)

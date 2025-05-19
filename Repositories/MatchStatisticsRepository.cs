@@ -15,10 +15,22 @@ namespace FootballerStatsApi.Repositories
         public async Task<List<MatchStatistic>> GetAllAsync()
         {
             return await dbContext.MatchStatistics.ToListAsync();
-        }           
+        }
+        public async Task<List<MatchStatistic>> GetAllForFootballerAsync(Guid footballerId)
+        {
+            var playerStats = await dbContext.MatchStatistics
+                .Where(stat => stat.FootballerId == footballerId)
+                .ToListAsync();
+
+            if (playerStats == null) return null;
+            return playerStats;
+        }
         public async Task<MatchStatistic?> GetByIdAsync(Guid id)
         {
-            return await dbContext.MatchStatistics.FindAsync(id);
+            var matchStats = await dbContext.MatchStatistics.FindAsync(id);
+            if (matchStats == null) return null; 
+            
+            return matchStats;
         }           
         public async Task<MatchStatistic> AddAsync(MatchStatistic stat)
         {

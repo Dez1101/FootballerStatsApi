@@ -5,6 +5,7 @@ namespace FootballerStatsApi.Repositories.Interfaces
     public interface IMatchStatisticsRepository
     {
         Task<List<MatchStatistic>> GetAllAsync();
+        Task<List<MatchStatistic>> GetAllForFootballerAsync(Guid footballerId);
         Task<MatchStatistic?> GetByIdAsync(Guid id);
         Task<MatchStatistic> AddAsync(MatchStatistic stat);
         Task<MatchStatistic?> UpdateAsync(Guid id, MatchStatistic stat);
