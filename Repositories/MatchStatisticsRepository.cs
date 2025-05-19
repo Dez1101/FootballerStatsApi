@@ -1,4 +1,5 @@
 ﻿using FootballerStatsApi.Data;
+using FootballerStatsApi.Dtos;
 using FootballerStatsApi.Models;
 using FootballerStatsApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,26 @@ namespace FootballerStatsApi.Repositories
 
             await dbContext.SaveChangesAsync();
             return existing;
+        }
+        public async Task<FootballerStatsSummaryDto?> GetSummaryForFootballerAsync(Guid footballerId)
+        {
+            var stats = await dbContext.MatchStatistics
+                .Where(ms => ms.FootballerId == footballerId)
+                .ToListAsync();
+
+            if (!stats.Any()) return null;
+            var footballer = await dbContext.Footballers.FindAsync(footballerId);
+
+            return new FootballerStatsSummaryDto
+            {
+                FootballerId = footballerId,
+                Name = footballer.Name,
+                TotalMatches = stats.Count,
+                TotalGoals = stats.Sum(ms => ms.Goals),
+                TotalAssists = stats.Sum(ms => ms.Assists),
+                TotalMinutesPlayed = stats.Sum(ms => ms.MinutesPlayed),
+                AveragePassCompletion = stats.Average(ms => ms.PassCompletion)
+            };
         }
         public async Task<bool> DeleteAsync(Guid id)
         {

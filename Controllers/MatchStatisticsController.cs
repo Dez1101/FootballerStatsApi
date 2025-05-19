@@ -50,6 +50,12 @@ namespace FootballerStatsApi.Controllers
             return Ok(mapper.Map<List<MatchStatisticDto>>(stats));
         }
 
+        [HttpGet("summary/footballer/{footballerId:guid}")]
+        public async Task<IActionResult> GetSummaryForFootballer(Guid footballerId)
+        {
+            var summary = await repository.GetSummaryForFootballerAsync(footballerId);
+            return summary == null ? NotFound() : Ok(summary);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddMatchStatisticDto dto)
