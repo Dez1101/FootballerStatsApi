@@ -23,14 +23,14 @@ namespace FootballerStatsApi.Controllers
         public async Task<IActionResult> GetAllPlayers()
         {
             var players = await playersRepository.GetAllPlayersAsync();
-            return Ok(mapper.Map<List<FootballerDto>>(players));
+            return Ok(mapper.Map<List<FootballerBasicDto>>(players));
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetPlayer(Guid id)
         {
             var player = await playersRepository.GetPlayerByIdAsync(id);
-            return player == null ? NotFound() : Ok(mapper.Map<FootballerDto>(player));
+            return player == null ? NotFound() : Ok(mapper.Map<FootballerBasicDto>(player));
         }
 
         [HttpPost]
