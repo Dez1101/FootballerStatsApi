@@ -56,26 +56,51 @@ namespace FootballerStatsApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var stat = mapper.Map<MatchStatistic>(dto);
-            var added = await repository.AddAsync(stat);
-            return CreatedAtAction(nameof(Get), new { id = added.Id }, mapper.Map<MatchStatisticDto>(added));
+            try
+            {
+                var stat = mapper.Map<MatchStatistic>(dto);
+                var added = await repository.AddAsync(stat);
+                return CreatedAtAction(nameof(Get), new { id = added.Id }, mapper.Map<MatchStatisticDto>(added));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while adding the match statistic.");
+            }
         }
+
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMatchStatisticDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var updatedEntity = mapper.Map<MatchStatistic>(dto);
-            var updated = await repository.UpdateAsync(id, updatedEntity);
-            return updated == null ? NotFound() : Ok(mapper.Map<MatchStatisticDto>(updated));
+            try
+            {
+                var updatedEntity = mapper.Map<MatchStatistic>(dto);
+                var updated = await repository.UpdateAsync(id, updatedEntity);
+                return updated == null ? NotFound() : Ok(mapper.Map<MatchStatisticDto>(updated));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while updating the match statistic.");
+            }
         }
+
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var deleted = await repository.DeleteAsync(id);
-            return deleted ? NoContent() : NotFound();
+            try
+            {
+                var deleted = await repository.DeleteAsync(id);
+                return deleted ? NoContent() : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while deleting the match statistic.");
+            }
+
         }
     }
 
