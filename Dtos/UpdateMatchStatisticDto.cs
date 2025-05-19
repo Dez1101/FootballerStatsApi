@@ -7,7 +7,7 @@ namespace FootballerStatsApi.Dtos
         [Required]
         public string Opposition { get; set; } = string.Empty;
 
-        [Range(0, 120)]
+        [Range(0, 140)]
         public int MinutesPlayed { get; set; }
 
         [Range(0, int.MaxValue)]
@@ -16,7 +16,7 @@ namespace FootballerStatsApi.Dtos
         [Range(0, int.MaxValue)]
         public int Assists { get; set; }
 
-        [Range(0, 100)]
+        [Range(0, int.MaxValue)]
         public double PassCompletion { get; set; }
     }
 }
