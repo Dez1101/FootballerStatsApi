@@ -14,6 +14,7 @@ namespace FootballerStatsApi.Mappings
             CreateMap<UpdatePlayerDto, Footballer>();
             CreateMap<Footballer, FootballerBasicDto>();
 
+            //stats mappings
             CreateMap<AddMatchStatisticDto, MatchStatistic>();
             CreateMap<MatchStatistic, MatchStatisticDto>();
             CreateMap<UpdateMatchStatisticDto, MatchStatistic>();

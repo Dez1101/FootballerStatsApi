@@ -72,7 +72,7 @@ namespace FootballerStatsApi.Repositories
         {
             try
             {
-                var stats = await dbContext.MatchStatistics
+                List<MatchStatistic> stats = await dbContext.MatchStatistics
                     .Where(ms => ms.FootballerId == footballerId)
                     .ToListAsync();
 
